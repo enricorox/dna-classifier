@@ -18,7 +18,7 @@ X, y = data.drop('class', axis=1), data[['class']]
 print("Splitting dataset...")
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
 
-print("Transform into DMatrices...")
+print("Transforming into DMatrices...")
 dtrain_reg = xgb.DMatrix(X_train, y_train, enable_categorical=True)
 dtest_reg = xgb.DMatrix(X_test, y_test, enable_categorical=True)
 
