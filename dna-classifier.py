@@ -19,8 +19,8 @@ print("Splitting dataset...")
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1234)
 
 print("Transforming into DMatrices...")
-dtrain_reg = xgb.DMatrix(X_train, y_train, enable_categorical=True)
-dtest_reg = xgb.DMatrix(X_test, y_test, enable_categorical=True)
+dtrain_reg = xgb.DMatrix(X_train, y_train)
+dtest_reg = xgb.DMatrix(X_test, y_test)
 
 # Define hyperparameters
 params = {"objective": "reg:squarederror", "tree_method": "gpu_hist"}
