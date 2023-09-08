@@ -16,7 +16,7 @@ data = pd.read_csv("data.csv")
 X, y = data.drop('class', axis=1), data[['class']]
 
 print("Splitting dataset...")
-X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1234)
 
 print("Transforming into DMatrices...")
 dtrain_reg = xgb.DMatrix(X_train, y_train, enable_categorical=True)
