@@ -10,7 +10,7 @@
 #SBATCH --cpus-per-task 1
 #SBATCH --partition allgroups
 #SBATCH --mem 500G
-#SBATCH --gres=gpu:1
+#SBATCH --gres=gpu:rtx
 
 source /nfsd/bcb/bcbg/rossigno/anaconda3/bin/activate
 conda activate dvf
