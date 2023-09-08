@@ -15,4 +15,6 @@
 source /nfsd/bcb/bcbg/rossigno/anaconda3/bin/activate
 conda activate dvf
 
+cd ..
+
 srun python dna-classifier.py
