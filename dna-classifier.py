@@ -19,6 +19,7 @@ X, y = data.drop('type', axis=1), data[['type']]
 print("Splitting dataset...")
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1234)
 
+# using dmatrices for better performances
 print("Transforming into DMatrices...")
 dtrain_reg = xgb.DMatrix(X_train, y_train)
 dtest_reg = xgb.DMatrix(X_test, y_test)
@@ -38,6 +39,6 @@ preds = model.predict(dtest_reg)
 
 rmse = mean_squared_error(y_test, preds, squared=False)
 
-print(f"RMSE of the base model: {rmse:.3f}")
+print(f"RMSE of the base model: {rmse:.5f}")
 
 print("Done!")
