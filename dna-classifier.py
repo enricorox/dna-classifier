@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import warnings
 
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, confusion_matrix
 
 import xgboost as xgb
 
@@ -38,7 +38,9 @@ print("Prediction...")
 preds = model.predict(dtest_reg)
 
 rmse = mean_squared_error(y_test, preds, squared=False)
-
 print(f"RMSE of the base model: {rmse:.5f}")
+
+conf_m = confusion_matrix(y_test, preds)
+print(conf_m)
 
 print("Done!")
