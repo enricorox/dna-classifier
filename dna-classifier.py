@@ -40,7 +40,7 @@ preds = model.predict(dtest_reg)
 rmse = mean_squared_error(y_test, preds, squared=False)
 print(f"RMSE of the base model: {rmse:.5f}")
 
-conf_m = confusion_matrix(y_test, preds)
+conf_m = confusion_matrix(y_test, [int(round(y)) for y in preds])
 print(conf_m)
 
 print("Done!")
