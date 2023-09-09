@@ -14,7 +14,7 @@ print("Loading data...")
 data = pd.read_csv("data.csv")
 
 # Extract feature and target arrays
-X, y = data.drop('type', axis=1), data[['type']]
+X, y = data.drop('label', axis=1), data[['label']]
 
 print("Splitting dataset...")
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1234)
