@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import warnings
 
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
 
 import xgboost as xgb
 
@@ -32,4 +33,11 @@ model = xgb.train(
    dtrain=dtrain_reg,
    num_boost_round=num_boost_round,
 )
+print("Prediction...")
+preds = model.predict(dtest_reg)
+
+rmse = mean_squared_error(y_test, preds, squared=False)
+
+print(f"RMSE of the base model: {rmse:.3f}")
+
 print("Done!")
