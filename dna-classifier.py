@@ -18,11 +18,12 @@ data = pd.read_csv("data.csv")
 X, y = data.drop('label', axis=1), data[['label']]
 
 print("Splitting dataset...")
-X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1234)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.9, random_state=1234)
 
 # using dmatrices for better performances
 print("Transforming into DMatrices...")
 dtrain_reg = xgb.DMatrix(X_train, y_train)
+dtrain_reg.set_weight([i for i in range(dtrain_reg.num_col())])
 dtest_reg = xgb.DMatrix(X_test, y_test)
 
 # Define hyperparameters
@@ -35,6 +36,7 @@ model = xgb.train(
    dtrain=dtrain_reg,
    num_boost_round=num_boost_round,
 )
+
 
 print("Prediction...")
 preds = model.predict(dtest_reg)
