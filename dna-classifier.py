@@ -36,11 +36,14 @@ model = xgb.train(
 )
 print("Prediction...")
 preds = model.predict(dtest_reg)
+preds_rounded = [int(round(y)) for y in preds]
 
 rmse = mean_squared_error(y_test, preds, squared=False)
 print(f"RMSE of the base model: {rmse:.5f}")
+rmse = mean_squared_error(y_test, preds_rounded, squared=False)
+print(f"RMSE of the base model with rounded numbers: {rmse:.5f}")
 
-conf_m = confusion_matrix(y_test, [int(round(y)) for y in preds])
+conf_m = confusion_matrix(y_test, preds_rounded)
 print(conf_m)
 
 print("Done!")
