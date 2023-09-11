@@ -52,8 +52,9 @@ print("Confusion matrix:")
 conf_m = confusion_matrix(y_test, preds_rounded)
 print(conf_m)
 
-print("Plotting features importance..")
-plot_importance(model)
-plt.savefig("feature-importance.png")
+print("Features importance:")
+# plot_importance(model)
+# plt.savefig("feature-importance.png") # too small
+model.get_score(importance_type="gain")
 
 print("Done!")
