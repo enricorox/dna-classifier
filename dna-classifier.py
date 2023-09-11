@@ -35,12 +35,13 @@ model = xgb.train(
    dtrain=dtrain_reg,
    num_boost_round=num_boost_round,
 )
+
 print("Prediction...")
 preds = model.predict(dtest_reg)
 preds_rounded = [int(round(y)) for y in preds]
 
-rmse = mean_squared_error(y_test, preds, squared=False)
-print(f"RMSE of the base model: {rmse:.5f}")
+# rmse = mean_squared_error(y_test, preds, squared=False)
+# print(f"RMSE of the base model: {rmse:.5f}")
 rmse = mean_squared_error(y_test, preds_rounded, squared=False)
 print(f"RMSE of the base model with rounded numbers: {rmse:.5f}")
 
