@@ -1,10 +1,11 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from xgboost import plot_importance
 import warnings
 
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error, confusion_matrix
+from sklearn.metrics import mean_squared_error, confusion_matrix, accuracy_score
 
 import xgboost as xgb
 
@@ -43,7 +44,14 @@ print(f"RMSE of the base model: {rmse:.5f}")
 rmse = mean_squared_error(y_test, preds_rounded, squared=False)
 print(f"RMSE of the base model with rounded numbers: {rmse:.5f}")
 
+accuracy = accuracy_score(y_test, preds_rounded)
+print(f"Accuracy: {accuracy * 100:.2f}%")
+
+print("Confusion matrix:")
 conf_m = confusion_matrix(y_test, preds_rounded)
 print(conf_m)
+
+print("Features importance:")
+plot_importance(model)
 
 print("Done!")
