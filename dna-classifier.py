@@ -23,7 +23,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.9, random_s
 # using dmatrices for better performances
 print("Transforming into DMatrices...")
 dtrain_reg = xgb.DMatrix(X_train, y_train)
-dtrain_reg.set_weight([i for i in range(dtrain_reg.num_col())])
+dtrain_reg.set_info(feature_weights=[1/i for i in range(dtrain_reg.num_col() -1)])
 dtest_reg = xgb.DMatrix(X_test, y_test)
 
 # Define hyperparameters
