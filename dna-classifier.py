@@ -11,23 +11,34 @@ import xgboost as xgb
 
 warnings.filterwarnings("ignore")
 
+
+train_data_file = "../dna-embeddings/training-data.csv"
+test_data_file = "../dna-embeddings/test-data.csv"
+validation_data_file = "../dna-embeddings/validation-data.csv"
+
 print(f"Using XGBoost version {xgb.__version__}")
 
-print("Loading data...")
-data = pd.read_csv("data.csv")
+# === read data & extract feature and target arrays===
+print("Loading training data...")
+train_data = pd.read_csv(train_data_file)
+X_train, y_train = train_data.drop('label', axis=1), train_data[['label']]
+print("Loading test data...")
+test_data = pd.read_csv(test_data_file)
+X_test, y_test = test_data.drop('label', axis=1), test_data[['label']]
+print("Loading validation data...")
+validation_data = pd.read_csv(validation_data_file)
+X_validation, y_validation = validation_data.drop('label', axis=1), validation_data[['label']]
 
-# Extract feature and target arrays
-X, y = data.drop('label', axis=1), data[['label']]
-
-print("Splitting dataset...")
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.95, random_state=1234)
-
-# using dmatrices for better performances
+# === use xgboost matrices ===
 print("Transforming into DMatrices...")
 dtrain_reg = xgb.DMatrix(X_train, y_train)
-# fw = [1/i for i in range(dtrain_reg.num_col() -1)]
-# dtrain_reg.set_info(feature_weights=fw)
+
+# test feature weights
+fw = [1/(i+1) for i in range(dtrain_reg.num_col() - 1)]
+#dtrain_reg.set_info(feature_weights=fw)
+
 dtest_reg = xgb.DMatrix(X_test, y_test)
+# ======
 
 # Define hyperparameters
 params = {"objective": "reg:squarederror", "tree_method": "gpu_hist"}
