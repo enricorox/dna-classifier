@@ -11,6 +11,8 @@ import xgboost as xgb
 
 warnings.filterwarnings("ignore")
 
+print(f"Using XGBoost version {xgb.__version__}")
+
 print("Loading data...")
 data = pd.read_csv("data.csv")
 
@@ -18,12 +20,13 @@ data = pd.read_csv("data.csv")
 X, y = data.drop('label', axis=1), data[['label']]
 
 print("Splitting dataset...")
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.9, random_state=1234)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.95, random_state=1234)
 
 # using dmatrices for better performances
 print("Transforming into DMatrices...")
 dtrain_reg = xgb.DMatrix(X_train, y_train)
-#dtrain_reg.set_info(feature_weights=[1/i for i in range(dtrain_reg.num_col() -1)])
+# fw = [1/i for i in range(dtrain_reg.num_col() -1)]
+# dtrain_reg.set_info(feature_weights=fw)
 dtest_reg = xgb.DMatrix(X_test, y_test)
 
 # Define hyperparameters
