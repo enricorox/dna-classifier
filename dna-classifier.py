@@ -42,6 +42,7 @@ dtest_reg = xgb.DMatrix(X_test, y_test)
 
 # Define hyperparameters
 params = {"objective": "reg:squarederror", "tree_method": "gpu_hist"}
+# params = {"objective": "reg:squarederror", "tree_method": "hist"}
 
 print("Training...")
 num_boost_round = 100
