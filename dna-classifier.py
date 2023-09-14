@@ -22,12 +22,23 @@ print(f"Using XGBoost version {xgb.__version__}")
 print("Loading training data...")
 train_data = pd.read_csv(train_data_file)
 X_train, y_train = train_data.drop('label', axis=1), train_data[['label']]
+print(f"\tData points: {len(X_train)}")
+print(f"\t\tlabel(0) counts: {(y_train['label'] == 0).sum()}")
+print(f"\t\tlabel(1) counts: {(y_train['label'] == 1).sum()}")
+
 print("Loading test data...")
 test_data = pd.read_csv(test_data_file)
 X_test, y_test = test_data.drop('label', axis=1), test_data[['label']]
+print(f"\tData points: {len(X_test)}")
+print(f"\t\tlabel(0) counts: {(y_test['label'] == 0).sum()}")
+print(f"\t\tlabel(1) counts: {(y_test['label'] == 1).sum()}")
+
 print("Loading validation data...")
 validation_data = pd.read_csv(validation_data_file)
 X_validation, y_validation = validation_data.drop('label', axis=1), validation_data[['label']]
+print(f"\tData points: {len(X_validation)}")
+print(f"\t\tlabel(0) counts: {(y_validation['label'] == 0).sum()}")
+print(f"\t\tlabel(1) counts: {(y_validation['label'] == 1).sum()}")
 
 # === use xgboost matrices ===
 print("Transforming into DMatrices...")
@@ -41,8 +52,8 @@ dtest_reg = xgb.DMatrix(X_test, y_test)
 # ======
 
 # Define hyperparameters
-params = {"objective": "reg:squarederror", "tree_method": "gpu_hist"}
-# params = {"objective": "reg:squarederror", "tree_method": "hist"}
+#params = {"objective": "reg:squarederror", "tree_method": "gpu_hist"}
+params = {"objective": "reg:squarederror", "tree_method": "hist"}
 
 print("Training...")
 num_boost_round = 100
