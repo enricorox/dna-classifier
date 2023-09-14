@@ -11,10 +11,10 @@ import xgboost as xgb
 
 warnings.filterwarnings("ignore")
 
-
-train_data_file = "../dna-embeddings/small/training-data.csv"
-test_data_file = "../dna-embeddings/small/test-data.csv"
-validation_data_file = "../dna-embeddings/small/validation-data.csv"
+dataset_folder = "../dna-embeddings/small/"
+train_data_file = dataset_folder + "training-data.csv"
+test_data_file = dataset_folder + "test-data.csv"
+validation_data_file = dataset_folder + "validation-data.csv"
 
 print(f"Using XGBoost version {xgb.__version__}")
 
