@@ -1,3 +1,5 @@
+import random
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -42,30 +44,38 @@ print(f"\t\tlabel(1) counts: {(y_validation['label'] == 1).sum()}")
 
 # === use xgboost matrices ===
 print("Transforming into DMatrices...")
-dtrain_reg = xgb.DMatrix(X_train, y_train)
+dtrain = xgb.DMatrix(X_train, y_train)
 
 # test feature weights
-fw = [1/(i+1) for i in range(dtrain_reg.num_col() - 1)]
-#dtrain_reg.set_info(feature_weights=fw)
+fw = np.uint32([random.choice([0, 1]) for _ in range(dtrain.num_col())])
+#dtrain.set_info(feature_weights=fw)
 
-dtest_reg = xgb.DMatrix(X_test, y_test)
-# ======
+dvalidation = xgb.DMatrix(X_validation, y_validation)
+dtest = xgb.DMatrix(X_test, y_test)
+# ========================================
 
 # Define hyperparameters
-#params = {"objective": "reg:squarederror", "tree_method": "gpu_hist"}
-params = {"objective": "reg:squarederror", "tree_method": "hist"}
+# params = {"objective": "reg:squarederror", "tree_method": "gpu_hist"}
+# params = {"objective": "reg:squarederror", "tree_method": "hist", "colsample_bynode": 0.75}
+# params = {"objective": "binary:hinge", "tree_method": "hist"}
+params = {"objective": "binary:hinge", "tree_method": "hist", "colsample_bynode": .9}
 
+# train and validation
+evals = [(dtrain, "training"), (dvalidation, "validation")]
 print("Training...")
-num_boost_round = 100
+num_boost_round = 1000
 model = xgb.train(
    params=params,
-   dtrain=dtrain_reg,
+   dtrain=dtrain,
    num_boost_round=num_boost_round,
+   evals=evals,
+   verbose_eval=10,
+   early_stopping_rounds=50
 )
 
 
 print("Prediction...")
-preds = model.predict(dtest_reg)
+preds = model.predict(dtest)
 preds_rounded = [int(round(y)) for y in preds]
 
 # rmse = mean_squared_error(y_test, preds, squared=False)
@@ -81,8 +91,8 @@ conf_m = confusion_matrix(y_test, preds_rounded)
 print(conf_m)
 
 print("Features importance:")
-# plot_importance(model)
-# plt.savefig("feature-importance.png") # too small
-model.get_score(importance_type="gain")
-
+plot_importance(model, height=2)
+plt.savefig("feature-importance.png") # too small
+scores = model.get_score(importance_type="weight")
+print(scores)
 print("Done!")
