@@ -48,7 +48,7 @@ dtrain = xgb.DMatrix(X_train, y_train)
 
 # test feature weights
 fw = np.uint32([random.choice([0, 1]) for _ in range(dtrain.num_col())])
-#dtrain.set_info(feature_weights=fw)
+dtrain.set_info(feature_weights=fw)
 
 dvalidation = xgb.DMatrix(X_validation, y_validation)
 dtest = xgb.DMatrix(X_test, y_test)
@@ -58,7 +58,7 @@ dtest = xgb.DMatrix(X_test, y_test)
 # params = {"objective": "reg:squarederror", "tree_method": "gpu_hist"}
 # params = {"objective": "reg:squarederror", "tree_method": "hist", "colsample_bynode": 0.75}
 # params = {"objective": "binary:hinge", "tree_method": "hist"}
-params = {"objective": "binary:hinge", "tree_method": "hist", "colsample_bynode": .9}
+params = {"objective": "binary:hinge", "tree_method": "gpu_hist", "colsample_bynode": .9}
 
 # train and validation
 evals = [(dtrain, "training"), (dvalidation, "validation")]
