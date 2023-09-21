@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name train
+#SBATCH --job-name train-xgboost
 #SBATCH --output logs/train.log
 #SBATCH --error logs/train.log
 #SBATCH --mail-user enrico.rossignolo@studenti.unipd.it
