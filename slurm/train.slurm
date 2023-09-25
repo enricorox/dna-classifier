@@ -13,7 +13,6 @@
 #SBATCH --gres=gpu:rtx
 
 source /nfsd/bcb/bcbg/rossigno/.miniconda3/bin/activate
-conda activate dvf
 
 cd ..
 
