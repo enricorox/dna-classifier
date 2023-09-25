@@ -62,7 +62,7 @@ dtest = xgb.DMatrix(X_test, y_test)
 # params = {"objective": "reg:squarederror", "tree_method": "gpu_hist"}
 # params = {"objective": "reg:squarederror", "tree_method": "hist", "colsample_bynode": 0.75}
 # params = {"objective": "binary:hinge", "tree_method": "hist"}
-params = {"objective": "binary:hinge", "tree_method": "gpu_hist", "colsample_bynode": .9}
+params = {"objective": "binary:hinge", "tree_method": "hist", "colsample_bynode": .9}
 
 # train and validation
 evals = [(dtrain, "training"), (dvalidation, "validation")]
