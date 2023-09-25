@@ -47,7 +47,11 @@ print("Transforming into DMatrices...")
 dtrain = xgb.DMatrix(X_train, y_train)
 
 # test feature weights
-fw = np.uint32([random.choice([0, 1]) for _ in range(dtrain.num_col())])
+# fw = np.uint32([random.choice([0, 1]) for _ in range(dtrain.num_col())])
+fw = [1 for _ in range(dtrain.num_col())]
+zeros = [1, 43, 17, 50, 45, 25, 37, 44, 38, 63]
+for i in zeros:
+    fw[i - 1] = 0
 dtrain.set_info(feature_weights=fw)
 
 dvalidation = xgb.DMatrix(X_validation, y_validation)
@@ -65,14 +69,13 @@ evals = [(dtrain, "training"), (dvalidation, "validation")]
 print("Training...")
 num_boost_round = 1000
 model = xgb.train(
-   params=params,
-   dtrain=dtrain,
-   num_boost_round=num_boost_round,
-   evals=evals,
-   verbose_eval=10,
-   early_stopping_rounds=50
+    params=params,
+    dtrain=dtrain,
+    num_boost_round=num_boost_round,
+    evals=evals,
+    verbose_eval=10,
+    early_stopping_rounds=50
 )
-
 
 print("Prediction...")
 preds = model.predict(dtest)
@@ -92,7 +95,7 @@ print(conf_m)
 
 print("Features importance:")
 plot_importance(model, height=2)
-plt.savefig("feature-importance.png") # too small
+plt.savefig("feature-importance.png")  # too small
 scores = model.get_score(importance_type="weight")
 print(scores)
 print("Done!")
