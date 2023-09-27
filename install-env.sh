@@ -1,6 +1,6 @@
 # environment for eXtreme Gradient Boosting (XGBoost)
 
-pip install --user xgboost
+pip install --user xgboost graphviz
 
 # Use CPU only
 #conda install -c conda-forge py-xgboost-cpu
