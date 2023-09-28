@@ -49,11 +49,13 @@ Test feature weights
 Weight for each feature, defines the probability of each feature being selected when colsample_by* is being used.
 All values must be greater than (or equal to) 0, otherwise a ValueError is thrown.
 """
+
+
 def equal_weight():
     return [1 for _ in range(dtrain.num_col())]
 
 
-def  random_weights():
+def random_weights():
     return np.uint32([random.choice([0, 1]) for _ in range(dtrain.num_col())])
 
 
@@ -74,8 +76,8 @@ def select_weight():
     return fw
 
 
-# fw = equal_weight()
-# fw = inverse_weight()
+#fw = equal_weight()
+#fw = inverse_weight()
 fw = select_weight()
 dtrain.set_info(feature_weights=fw)
 col_sample_bynode = .1
@@ -88,8 +90,9 @@ dtest = xgb.DMatrix(X_test, y_test)
 # params = {"objective": "reg:squarederror", "tree_method": "gpu_hist"}
 # params = {"objective": "reg:squarederror", "tree_method": "hist", "colsample_bynode": 0.75}
 # params = {"objective": "binary:hinge", "tree_method": "hist"}
-params = {"verbosity": 2, "device": "cpu", "objective": "binary:hinge", "tree_method": "hist", "colsample_bytree": col_sample_bynode}
-
+params = {"verbosity": 2, "device": "cpu", "objective": "binary:hinge", "tree_method": "hist",
+          "colsample_bytree": col_sample_bynode, "max_depth": 12}
+params["interaction_constraints"] = [["kmer43", "kmer25", "kmer17"]]
 # train and validation
 evals = [(dtrain, "training"), (dvalidation, "validation")]
 print("Training...")
@@ -136,4 +139,4 @@ print(scores)
 print("Done!")
 
 graph = xgb.to_graphviz(model, num_trees=0)
-graph.render(filename="decision-tree-0.gv")
+graph.render(filename=f"decision-tree-0.gv{f1}")
