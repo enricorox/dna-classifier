@@ -127,7 +127,7 @@ class XGBoostDNA:
 
 
 if __name__ == "__main__":
-    dataset_folder = "../dna-embeddings/small/"
+    dataset_folder = "../dna-embeddings/medium/"
     train_data_file = dataset_folder + "training-data.csv"
     test_data_file = dataset_folder + "test-data.csv"
     validation_data_file = dataset_folder + "validation-data.csv"
