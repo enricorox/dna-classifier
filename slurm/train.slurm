@@ -16,4 +16,5 @@ source /nfsd/bcb/bcbg/rossigno/.miniconda3/bin/activate
 
 cd ..
 
-srun python dna-classifier.py
+# srun python dna-classifier.py
+srun python XGBoostDNA.py
