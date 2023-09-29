@@ -1,16 +1,23 @@
 import graphviz
 import pandas as pd
 import xgboost as xgb
-from xgboost import XGBClassifier, Booster
+from numpy import ndarray
+from sklearn.metrics import confusion_matrix
+from xgboost import Booster
 
 
 class XGBoostDNA:
     bst: Booster
     num_trees: int
+    best_it: int
+    best_score: float
 
     dtrain: xgb.DMatrix
     dvalidation: xgb.DMatrix
     dtest: xgb.DMatrix
+
+    y_pred: ndarray
+    y_test: ndarray
 
     def __init__(self, model_name="xgbtree", num_trees=10):
         self.model_name = model_name
@@ -36,7 +43,8 @@ class XGBoostDNA:
         print(f"\t\tlabel(0) counts: {(y_test['label'] == 0).sum()}")
         print(f"\t\tlabel(1) counts: {(y_test['label'] == 1).sum()}")
         print("Transforming into DMatrices...")
-        self.dtest = xgb.DMatrix(X_test, y_test)
+        self.y_test = y_test
+        self.dtest = xgb.DMatrix(X_test)
         del test_data
 
         if validation_data_file is not None:
@@ -77,14 +85,38 @@ class XGBoostDNA:
 
         # update number of trees in case of early stopping
         self.num_trees = self.bst.num_boosted_rounds()
+        self.best_it = self.bst.best_iteration
+        self.best_score = self.bst.best_score
 
     def predict(self, iteration_range=None):
         if iteration_range is None:
-            iteration_range = (0, self.num_trees)
+            iteration_range = (0, self.best_it)
 
-        self.bst.predict(self.dtest, iteration_range=iteration_range)
+        self.y_pred = self.bst.predict(self.dtest, iteration_range=iteration_range)
 
-    def print_trees(self, tree_set=None):
+    def print_stats(self):
+        print("\nPrediction stats:")
+
+        print(f"Best score: {self.best_score}")
+        print(f"Best iteration: {self.best_it}")
+
+        conf_mat = confusion_matrix(self.y_test, self.y_pred)
+        true_neg = conf_mat[0][0]
+        true_pos = conf_mat[1][1]
+        false_neg = conf_mat[1][0]
+        false_pos = conf_mat[0][1]
+
+        assert (true_pos + false_neg) == sum(self.y_test["label"])
+        assert (true_neg + false_pos) == len(self.y_test["label"]) - sum(self.y_test["label"])
+        assert (true_neg + true_pos + false_neg + false_pos) == len(self.y_test["label"])
+
+        print(f"TN={true_neg}\tFP={false_pos}")
+        print(f"FN={false_neg}\tTP={true_pos}")
+
+        accuracy = (true_pos + true_neg) / (true_pos + true_neg + false_pos + false_neg)
+        print(f"Accuracy = {accuracy}")
+
+    def plot_trees(self, tree_set=None):
         if tree_set is None:
             tree_set = range(self.num_trees)
 
@@ -104,4 +136,5 @@ if __name__ == "__main__":
     clf.read_datasets(train_data_file, test_data_file, validation_data_file=validation_data_file)
     clf.fit()
     clf.predict()
-    clf.print_trees()
+    clf.print_stats()
+    clf.plot_trees()
