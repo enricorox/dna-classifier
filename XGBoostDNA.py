@@ -30,8 +30,8 @@ class XGBoostDNA:
         train_data = pd.read_csv(train_data_file)
         X_train, y_train = train_data.drop('label', axis=1), train_data[['label']]
         print(f"\tData points: {len(X_train)}")
-        print(f"\t\tlabel(0) counts: {(y_train['label'] == 0).sum()}")
-        print(f"\t\tlabel(1) counts: {(y_train['label'] == 1).sum()}")
+        print(f"\t\tlabel(0) counts: {(y_train['label'] == 0).sum() / len(y_train['label']) * 100 : .2f} %")
+        print(f"\t\tlabel(1) counts: {(y_train['label'] == 1).sum() / len(y_train['label']) * 100 : .2f} %")
         print("Transforming into DMatrices...")
         self.dtrain = xgb.DMatrix(X_train, y_train)
         del train_data
@@ -40,8 +40,8 @@ class XGBoostDNA:
         test_data = pd.read_csv(test_data_file)
         X_test, y_test = test_data.drop('label', axis=1), test_data[['label']]
         print(f"\tData points: {len(X_test)}")
-        print(f"\t\tlabel(0) counts: {(y_test['label'] == 0).sum()}")
-        print(f"\t\tlabel(1) counts: {(y_test['label'] == 1).sum()}")
+        print(f"\t\tlabel(0) counts: {(y_test['label'] == 0).sum() / len(y_test['label']) * 100 : .2f} %")
+        print(f"\t\tlabel(1) counts: {(y_test['label'] == 1).sum() / len(y_test['label']) * 100 : .2f} %")
         print("Transforming into DMatrices...")
         self.y_test = y_test
         self.dtest = xgb.DMatrix(X_test)
@@ -52,8 +52,8 @@ class XGBoostDNA:
             validation_data = pd.read_csv(validation_data_file)
             X_validation, y_validation = validation_data.drop('label', axis=1), validation_data[['label']]
             print(f"\tData points: {len(X_validation)}")
-            print(f"\t\tlabel(0) counts: {(y_validation['label'] == 0).sum()}")
-            print(f"\t\tlabel(1) counts: {(y_validation['label'] == 1).sum()}")
+            print(f"\t\tlabel(0) counts: {(y_validation['label'] == 0).sum() / len(y_validation['label']) * 100 : .2f} %")
+            print(f"\t\tlabel(1) counts: {(y_validation['label'] == 1).sum() / len(y_validation['label']) * 100 : .2f} %")
             print("Transforming into DMatrices...")
             self.dvalidation = xgb.DMatrix(X_validation, y_validation)
             del validation_data
@@ -127,10 +127,12 @@ class XGBoostDNA:
 
 
 if __name__ == "__main__":
-    dataset_folder = "../dna-embeddings/medium/"
+    dataset_folder = "../dna-embeddings/small/"
     train_data_file = dataset_folder + "training-data.csv"
     test_data_file = dataset_folder + "test-data.csv"
     validation_data_file = dataset_folder + "validation-data.csv"
+
+    # validation_data_file, train_data_file = train_data_file, validation_data_file
 
     clf = XGBoostDNA(num_trees=100)
     clf.read_datasets(train_data_file, test_data_file, validation_data_file=validation_data_file)
@@ -138,3 +140,8 @@ if __name__ == "__main__":
     clf.predict()
     clf.print_stats()
     clf.plot_trees()
+
+# TODO add tree depth
+# TODO add variable constraints
+# TODO add features sampling by *
+# TODO add data points sampling
