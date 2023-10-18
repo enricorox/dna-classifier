@@ -68,8 +68,8 @@ class XGBoostDNA:
 
         if params is None:
             params = {"verbosity": 1, "device": "cuda", "objective": "binary:hinge", "tree_method": "hist",
-                      "colsample_bytree": .8}
-
+                      "colsample_bytree": .8, "seed": 0}
+            # params["eval_metric"] = "auc"
         if evals is None:
             if self.dvalidation is None:
                 evals = [(self.dtrain, "training")]
@@ -141,7 +141,10 @@ if __name__ == "__main__":
     clf.print_stats()
     clf.plot_trees()
 
-# TODO add tree depth
+# TODO add max_depth
 # TODO add variable constraints
 # TODO add features sampling by *
 # TODO add data points sampling
+# TODO add scale_pos_weight to balance classes
+# TODO add eta (learning rate)
+# TODO add gamma (high for conservative algorithm)
